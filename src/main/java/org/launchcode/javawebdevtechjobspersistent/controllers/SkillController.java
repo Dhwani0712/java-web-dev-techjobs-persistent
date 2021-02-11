@@ -1,6 +1,5 @@
 package org.launchcode.javawebdevtechjobspersistent.controllers;
 
-
 import org.launchcode.javawebdevtechjobspersistent.models.Skill;
 import org.launchcode.javawebdevtechjobspersistent.models.data.SkillRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,12 +12,18 @@ import javax.validation.Valid;
 import java.util.Optional;
 
 @Controller
-@RequestMapping("Skills")
+@RequestMapping("skills")
 public class SkillController {
 
     @Autowired
     private SkillRepository skillRepository;
 
+    @GetMapping("")
+    public String displayAllSkills(Model model) {
+        model.addAttribute("title", "All Skills");
+        model.addAttribute("skills", skillRepository.findAll());
+        return "skills/index";
+    }
 
     @GetMapping("add")
     public String displayAddSkillForm(Model model) {
@@ -33,8 +38,6 @@ public class SkillController {
         if (errors.hasErrors()) {
             return "skills/add";
         }
-        //employerRepository.save(newEmployer);
-
         skillRepository.save(newSkill);
         return "redirect:";
     }
@@ -42,7 +45,6 @@ public class SkillController {
     @GetMapping("view/{skillId}")
     public String displayViewSkill(Model model, @PathVariable int skillId) {
 
-        //Optional optEmployer = null;
         Optional optSkill = skillRepository.findById(skillId);
         if (optSkill.isPresent()) {
             Skill skill = (Skill) optSkill.get();
@@ -52,5 +54,4 @@ public class SkillController {
             return "redirect:../";
         }
     }
-
 }
